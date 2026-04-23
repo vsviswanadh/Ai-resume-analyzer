@@ -34,7 +34,7 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         self.assertEqual(analyzer.top_k, 1)
 
 
-    def test_configuration_controls_chunking_and_retrieval(self) -> None:
+    def test_top_k_limits_returned_context_lines(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
         answer = analyzer.analyze(self.resume, "Tell me about Python and Docker skills")
         lines = answer.splitlines()
@@ -50,7 +50,7 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.analyzer.analyze(self.resume, "")
 
-    def test_large_configuration_values_handle_small_resume_gracefully(self) -> None:
+    def test_configuration_exceeding_resume_size_returns_single_chunk(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=99, top_k=99)
         answer = analyzer.analyze(self.resume, "Tell me about ATS and Python")
         lines = answer.splitlines()

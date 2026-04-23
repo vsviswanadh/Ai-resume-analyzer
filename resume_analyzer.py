@@ -24,6 +24,12 @@ class ResumeRAGAnalyzer:
     """
 
     def __init__(self, chunk_size: int = 2, top_k: int = 3):
+        """Initialize analyzer settings.
+
+        Args:
+            chunk_size: Number of resume lines per retrieval chunk (minimum 1).
+            top_k: Maximum number of relevant chunks to return (minimum 1).
+        """
         self.chunk_size = max(1, chunk_size)
         self.top_k = max(1, top_k)
 
@@ -39,7 +45,8 @@ class ResumeRAGAnalyzer:
     def _retrieve(self, resume_text: str, question: str) -> List[Chunk]:
         q_tokens = set(self._tokenize(question))
         scored: List[Chunk] = []
-        for block in self._chunks_from_resume(resume_text):
+        resume_chunks = self._chunks_from_resume(resume_text)
+        for block in resume_chunks:
             b_tokens = set(self._tokenize(block))
             overlap = q_tokens.intersection(b_tokens)
             score = len(overlap) / max(len(q_tokens), 1)
@@ -48,7 +55,7 @@ class ResumeRAGAnalyzer:
 
         if not scored:
             # fallback context keeps behavior useful even when overlap is low
-            fallback = self._chunks_from_resume(resume_text)[: self.top_k]
+            fallback = resume_chunks[: self.top_k]
             return [Chunk(text=chunk, score=0.0) for chunk in fallback]
 
         scored.sort(key=lambda c: c.score, reverse=True)
