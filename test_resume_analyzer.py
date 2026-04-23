@@ -28,6 +28,11 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         answer = self.analyzer.analyze(self.resume, "How should I improve project bullets?")
         self.assertIn("For each project, include problem, approach, and measurable outcome.", answer)
 
+    def test_constructor_enforces_minimum_configuration_values(self) -> None:
+        analyzer = ResumeRAGAnalyzer(chunk_size=0, top_k=0)
+        self.assertEqual(analyzer.chunk_size, 1)
+        self.assertEqual(analyzer.top_k, 1)
+
 
     def test_configuration_controls_chunking_and_retrieval(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
