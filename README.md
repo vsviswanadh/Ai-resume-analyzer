@@ -5,7 +5,7 @@ A lightweight LLM+RAG-style resume analyzer that reviews a resume and suggests i
 ## Run
 
 ```bash
-python /home/runner/work/Ai-resume-analyzer/Ai-resume-analyzer/resume_analyzer.py \
+python resume_analyzer.py \
   --resume /path/to/resume.txt \
   --question "How can I improve this resume for ATS and project clarity?"
 ```
@@ -13,6 +13,5 @@ python /home/runner/work/Ai-resume-analyzer/Ai-resume-analyzer/resume_analyzer.p
 ## Test
 
 ```bash
-cd /home/runner/work/Ai-resume-analyzer/Ai-resume-analyzer
 python -m unittest -v test_resume_analyzer.py
 ```
