@@ -50,6 +50,15 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.analyzer.analyze(self.resume, "")
 
+    def test_large_configuration_values_handle_small_resume_gracefully(self) -> None:
+        analyzer = ResumeRAGAnalyzer(chunk_size=99, top_k=99)
+        answer = analyzer.analyze(self.resume, "Tell me about ATS and Python")
+        lines = answer.splitlines()
+        context_start = lines.index("Retrieved Resume Context:") + 1
+        suggestions_start = lines.index("Suggested Improvements:")
+        context_lines = [line for line in lines[context_start:suggestions_start] if line.startswith("- ")]
+        self.assertEqual(len(context_lines), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

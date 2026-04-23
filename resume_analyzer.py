@@ -7,6 +7,7 @@ from typing import Iterable, List
 
 
 _WORD_PATTERN = re.compile(r"[a-zA-Z0-9+#]+")
+MAX_SUGGESTIONS = 5
 
 
 @dataclass
@@ -70,7 +71,9 @@ class ResumeRAGAnalyzer:
         if "project" in question_lower:
             suggestions.insert(0, "For each project, include problem, approach, and measurable outcome.")
 
-        suggestion_block = "\n".join(f"{i + 1}. {item}" for i, item in enumerate(suggestions[:5]))
+        suggestion_block = "\n".join(
+            f"{i + 1}. {item}" for i, item in enumerate(suggestions[:MAX_SUGGESTIONS])
+        )
 
         return (
             f"Question: {question.strip()}\n\n"
