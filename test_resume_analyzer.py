@@ -32,9 +32,10 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
     def test_configuration_controls_chunking_and_retrieval(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
         answer = analyzer.analyze(self.resume, "Tell me about Python and Docker skills")
-        context_lines = [
-            line for line in answer.splitlines() if line.startswith("- ") and "Suggested Improvements" not in line
-        ]
+        lines = answer.splitlines()
+        context_start = lines.index("Retrieved Resume Context:") + 1
+        suggestions_start = lines.index("Suggested Improvements:")
+        context_lines = [line for line in lines[context_start:suggestions_start] if line.startswith("- ")]
         self.assertEqual(len(context_lines), 1)
         self.assertIn("Python, FastAPI, PostgreSQL, Docker", context_lines[0])
 
