@@ -28,6 +28,15 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         answer = self.analyzer.analyze(self.resume, "How should I improve project bullets?")
         self.assertIn("For each project, include problem, approach, and measurable outcome.", answer)
 
+
+    def test_configuration_controls_chunking_and_retrieval(self) -> None:
+        analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
+        chunks = analyzer._chunks_from_resume(self.resume)
+        self.assertGreater(len(chunks), 1)
+
+        retrieved = analyzer._retrieve(self.resume, "Tell me about Python and Docker skills")
+        self.assertEqual(len(retrieved), 1)
+
     def test_empty_inputs_raise_value_error(self) -> None:
         with self.assertRaises(ValueError):
             self.analyzer.analyze("", "question")

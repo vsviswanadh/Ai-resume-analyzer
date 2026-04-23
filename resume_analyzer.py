@@ -86,8 +86,8 @@ class ResumeRAGAnalyzer:
             return []
 
         grouped = []
-        for index in range(0, len(lines), self.chunk_size):
-            grouped.append(" ".join(lines[index : index + self.chunk_size]))
+        for chunk_start in range(0, len(lines), self.chunk_size):
+            grouped.append(" ".join(lines[chunk_start : chunk_start + self.chunk_size]))
         return grouped
 
     @staticmethod
