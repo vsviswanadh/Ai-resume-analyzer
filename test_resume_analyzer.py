@@ -33,6 +33,11 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
         self.assertEqual(analyzer.chunk_size, 1)
         self.assertEqual(analyzer.top_k, 1)
 
+    def test_constructor_defaults(self) -> None:
+        analyzer = ResumeRAGAnalyzer()
+        self.assertEqual(analyzer.chunk_size, 2)
+        self.assertEqual(analyzer.top_k, 3)
+
 
     def test_top_k_limits_returned_context_lines(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
