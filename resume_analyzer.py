@@ -106,8 +106,11 @@ def main() -> None:
     parser = _build_parser()
     args = parser.parse_args()
 
-    with open(args.resume, "r", encoding="utf-8") as handle:
-        resume_text = handle.read()
+    try:
+        with open(args.resume, "r", encoding="utf-8") as handle:
+            resume_text = handle.read()
+    except FileNotFoundError:
+        parser.error(f"resume file not found: {args.resume}")
 
     analyzer = ResumeRAGAnalyzer()
     print(analyzer.analyze(resume_text=resume_text, question=args.question))

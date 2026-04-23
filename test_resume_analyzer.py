@@ -31,11 +31,12 @@ class ResumeRAGAnalyzerTests(unittest.TestCase):
 
     def test_configuration_controls_chunking_and_retrieval(self) -> None:
         analyzer = ResumeRAGAnalyzer(chunk_size=2, top_k=1)
-        chunks = analyzer._chunks_from_resume(self.resume)
-        self.assertGreater(len(chunks), 1)
-
-        retrieved = analyzer._retrieve(self.resume, "Tell me about Python and Docker skills")
-        self.assertEqual(len(retrieved), 1)
+        answer = analyzer.analyze(self.resume, "Tell me about Python and Docker skills")
+        context_lines = [
+            line for line in answer.splitlines() if line.startswith("- ") and "Suggested Improvements" not in line
+        ]
+        self.assertEqual(len(context_lines), 1)
+        self.assertIn("Python, FastAPI, PostgreSQL, Docker", context_lines[0])
 
     def test_empty_inputs_raise_value_error(self) -> None:
         with self.assertRaises(ValueError):
